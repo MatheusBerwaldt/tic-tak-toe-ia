@@ -39,7 +39,7 @@ A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretam
 1. **Clone o repositório:**
 
    ```bash
-   git clone <url-do-seu-repo>
+   git clone https://github.com/MatheusBerwaldt/tic-tak-toe-ia.git
    cd tic-tac-toe-ai
    ```
 
