@@ -9,7 +9,7 @@ Este projeto implementa um sistema de Inteligência Artificial para classificar 
 
 ## Objetivo
 
-A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretamente o estado do jogo. O sistema foi desenvolvido para fins didáticos, seguindo as etapas de um trabalho prático de disciplina de IA/ML.
+A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretamente o estado do jogo. O sistema foi desenvolvido para fins didáticos, seguindo as etapas de um trabalho prático de disciplina de IA.
 
 ## Tecnologias Utilizadas
 
@@ -30,7 +30,7 @@ A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretam
 
 1. **Clone o repositório:**
    ```bash
-   git clone <url-do-seu-repo>
+   git clone https://github.com/MatheusBerwaldt/tic-tak-toe-ia.git
    cd tic-tac-toe-ai
    ```
 2. **Instale as dependências:**
@@ -67,7 +67,3 @@ A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretam
 
 - Projeto desenvolvido para fins acadêmicos.
 - Dataset base: [UCI Machine Learning Repository - Tic-Tac-Toe Endgame Data Set](https://archive.ics.uci.edu/dataset/101/tic+tac+toe+endgame)
-
----
-
-Sinta-se à vontade para contribuir, sugerir melhorias ou relatar problemas!
