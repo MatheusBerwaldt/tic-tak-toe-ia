@@ -9,11 +9,11 @@ Este projeto implementa um sistema de Inteligência Artificial para classificar 
 
 ## Objetivo
 
-A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretamente o estado do jogo. O sistema foi desenvolvido para fins didáticos, seguindo as etapas de um trabalho prático de disciplina de IA/ML.
+A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretamente o estado do jogo. O sistema foi desenvolvido para fins didáticos, seguindo as etapas de um trabalho prático de disciplina de IA.
 
 ## Tecnologias Utilizadas
 
-- Python 3
+- Python 3.8+
 - Flask (frontend web)
 - scikit-learn (modelos de ML)
 - pandas, matplotlib (análise e visualização)
@@ -28,21 +28,91 @@ A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretam
 
 ## Como rodar o projeto
 
+### Pré-requisitos
+
+- Python 3.8 ou superior
+- pip (gerenciador de pacotes do Python)
+- Git
+
+### No Linux
+
 1. **Clone o repositório:**
+
    ```bash
    git clone <url-do-seu-repo>
    cd tic-tac-toe-ai
    ```
-2. **Instale as dependências:**
+
+2. **Crie e ative um ambiente virtual:**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Instale as dependências:**
+
    ```bash
    pip install -r requirements.txt
    ```
-3. **Execute o sistema:**
+
+4. **Execute o sistema:**
    ```bash
    python webapp.py
    ```
-4. **Acesse no navegador:**
-   - http://localhost:5000
+
+### No Windows
+
+1. **Clone o repositório:**
+
+   ```cmd
+   git clone <url-do-seu-repo>
+   cd tic-tac-toe-ai
+   ```
+
+2. **Crie e ative um ambiente virtual:**
+
+   ```cmd
+   python -m venv venv
+   venv\Scripts\activate
+   ```
+
+3. **Instale as dependências:**
+
+   ```cmd
+   pip install -r requirements.txt
+   ```
+
+4. **Execute o sistema:**
+   ```cmd
+   python webapp.py
+   ```
+
+### Acessando a aplicação
+
+Após executar o sistema, acesse no navegador:
+
+- http://localhost:5000
+
+### Solução de Problemas
+
+#### Linux
+
+- Se o comando python3 não for encontrado:
+  ```bash
+  sudo apt update
+  sudo apt install python3
+  ```
+- Se o pip não estiver instalado:
+  ```bash
+  sudo apt install python3-pip
+  ```
+
+#### Windows
+
+- Se o Python não for reconhecido, baixe e instale do [site oficial do Python](https://www.python.org/downloads/)
+- Durante a instalação do Python no Windows, marque a opção "Add Python to PATH"
+- Se precisar instalar o Git: [Download Git para Windows](https://git-scm.com/download/win)
 
 ## Funcionamento
 
@@ -67,7 +137,3 @@ A IA recebe como entrada o estado atual do tabuleiro e deve classificar corretam
 
 - Projeto desenvolvido para fins acadêmicos.
 - Dataset base: [UCI Machine Learning Repository - Tic-Tac-Toe Endgame Data Set](https://archive.ics.uci.edu/dataset/101/tic+tac+toe+endgame)
-
----
-
-Sinta-se à vontade para contribuir, sugerir melhorias ou relatar problemas!
