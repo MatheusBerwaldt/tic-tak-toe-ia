@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from ucimlrepo import fetch_ucirepo
+import random
 
 class DatasetLoader:
     def __init__(self):
@@ -18,17 +19,97 @@ class DatasetLoader:
                      'bottom-left', 'bottom-middle', 'bottom-right',
                      'resultado']
         
+        # Geração de exemplos sintéticos de tabuleiros 'em_jogo' (válidos)
+        def gerar_tabuleiro_em_jogo():
+            while True:
+                n_jogadas = random.randint(3, 8)
+                board = ['b'] * 9
+                jogadas = []
+                for i in range(n_jogadas):
+                    vazias = [idx for idx, v in enumerate(board) if v == 'b']
+                    if not vazias:
+                        break
+                    pos = random.choice(vazias)
+                    board[pos] = 'x' if i % 2 == 0 else 'o'
+                # Checa se NÃO há vitória nem empate
+                temp = pd.DataFrame([board], columns=[
+                    'top-left', 'top-middle', 'top-right',
+                    'middle-left', 'middle-middle', 'middle-right',
+                    'bottom-left', 'bottom-middle', 'bottom-right'])
+                estado = self.determinar_estado(temp.iloc[0])
+                if estado == 'em_jogo':
+                    temp['resultado'] = 'in_progress'
+                    temp['estado'] = 'em_jogo'
+                    return temp
+        
+        # Geração de exemplos sintéticos para todas as classes
+        def gerar_vitoria(jogador):
+            tabuleiros = []
+            combinacoes = [
+                [0,1,2], [3,4,5], [6,7,8],
+                [0,3,6], [1,4,7], [2,5,8],
+                [0,4,8], [2,4,6]
+            ]
+            for combo in combinacoes:
+                for _ in range(70):
+                    board = ['b'] * 9
+                    for idx in combo:
+                        board[idx] = jogador
+                    # Preenche o resto aleatoriamente sem formar outra vitória
+                    outros = [i for i in range(9) if i not in combo]
+                    jogadas = ['x','o']*4
+                    random.shuffle(jogadas)
+                    for i, idx in enumerate(outros):
+                        if board[idx] == 'b':
+                            board[idx] = jogadas[i]
+                            # Garante que não cria outra vitória
+                            temp = pd.DataFrame([board], columns=[
+                                'top-left', 'top-middle', 'top-right',
+                                'middle-left', 'middle-middle', 'middle-right',
+                                'bottom-left', 'bottom-middle', 'bottom-right'])
+                            estado = self.determinar_estado(temp.iloc[0])
+                            if estado != f'{jogador}_venceu':
+                                board[idx] = 'b'
+                    temp = pd.DataFrame([board], columns=[
+                        'top-left', 'top-middle', 'top-right',
+                        'middle-left', 'middle-middle', 'middle-right',
+                        'bottom-left', 'bottom-middle', 'bottom-right'])
+                    temp['resultado'] = 'synthetic'
+                    temp['estado'] = f'{jogador}_venceu'
+                    tabuleiros.append(temp)
+            return pd.concat(tabuleiros, ignore_index=True)
+        def gerar_empate():
+            tabuleiros = []
+            for _ in range(500):
+                board = ['x']*5 + ['o']*4
+                random.shuffle(board)
+                temp = pd.DataFrame([board], columns=[
+                    'top-left', 'top-middle', 'top-right',
+                    'middle-left', 'middle-middle', 'middle-right',
+                    'bottom-left', 'bottom-middle', 'bottom-right'])
+                estado = self.determinar_estado(temp.iloc[0])
+                if estado == 'empate':
+                    temp['resultado'] = 'synthetic'
+                    temp['estado'] = 'empate'
+                    tabuleiros.append(temp)
+            return pd.concat(tabuleiros, ignore_index=True)
+        exemplos_x = gerar_vitoria('x')
+        exemplos_o = gerar_vitoria('o')
+        exemplos_empate = gerar_empate()
+        exemplos_em_jogo = pd.concat([gerar_tabuleiro_em_jogo() for _ in range(500)], ignore_index=True)
+        df = pd.concat([df, exemplos_x, exemplos_o, exemplos_empate, exemplos_em_jogo], ignore_index=True)
+        
         # Transforma para classificação multiclasse (4 estados)
         df['estado'] = df.apply(self.determinar_estado, axis=1)
         
-        # Balanceamento (200 exemplos de cada classe)
-        samples_per_class = 200
-        balanced_df = pd.concat([
-            df[df['estado'] == 'x_venceu'].sample(samples_per_class, random_state=42),
-            df[df['estado'] == 'o_venceu'].sample(samples_per_class, random_state=42),
-            df[df['estado'] == 'empate'].sample(samples_per_class, random_state=42),
-            df[df['estado'] == 'em_jogo'].sample(samples_per_class, random_state=42)
-        ])
+        # Balanceamento rigoroso: exatamente samples_per_class exemplos por classe
+        samples_per_class = 500
+        balanced_dfs = []
+        for estado in ['x_venceu', 'o_venceu', 'empate', 'em_jogo']:
+            df_estado = df[df['estado'] == estado]
+            if len(df_estado) > 0:
+                balanced_dfs.append(df_estado.sample(samples_per_class, random_state=42, replace=True))
+        balanced_df = pd.concat(balanced_dfs, ignore_index=True)
         
         # Codifica features (x->1, o->0, b->2)
         for col in balanced_df.columns[:-2]:  # Todas exceto resultado e estado

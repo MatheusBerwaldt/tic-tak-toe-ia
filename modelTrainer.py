@@ -34,13 +34,36 @@ class ModelTrainer:
 
     def print_results(self):
         print("\n=== Resultados dos Modelos ===")
+        resultados = []
         for name, metrics in self.results.items():
+            acc = metrics['accuracy']
+            report = metrics['report']
+            resultados.append({
+                'Modelo': name,
+                'Acurácia': acc,
+                'Precision': report['weighted avg']['precision'],
+                'Recall': report['weighted avg']['recall'],
+                'F1': report['weighted avg']['f1-score']
+            })
             print(f"\n{name}:")
             print(f"Acurácia: {metrics['accuracy']:.4f}")
             print("Relatório:")
             print(pd.DataFrame(metrics['report']).transpose())
-        
         print(f"\nMelhor modelo: {self.best_model[0]} (Acurácia: {self.best_model[1]['accuracy']:.4f})")
+        # Tabela resumo
+        df_resultados = pd.DataFrame(resultados)
+        print("\nTabela de comparação:")
+        print(df_resultados)
+        # Gráfico
+        try:
+            df_resultados.set_index('Modelo')[['Acurácia', 'Precision', 'Recall', 'F1']].plot.bar()
+            plt.title('Comparação dos Modelos')
+            plt.ylabel('Score')
+            plt.ylim(0, 1)
+            plt.tight_layout()
+            plt.show()
+        except Exception as e:
+            print(f"Erro ao gerar gráfico: {e}")
 
     def get_best_model(self):
         return self.best_model[1]['model']

@@ -42,4 +42,5 @@ def main():
     print(f"F1-Score: {metrics['f1_score']:.4f}")
 
 if __name__ == "__main__":
-    main()
+    # main()  # Comentado para não rodar o frontend de terminal
+    pass
